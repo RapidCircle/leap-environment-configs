@@ -1,2 +1,2 @@
-# fetch-environment-variables
-Fetch Environment Variables
+# Fetch Environment Configs
+Fetch Environment Configs
