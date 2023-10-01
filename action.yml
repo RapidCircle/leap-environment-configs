@@ -1,0 +1,33 @@
+name: "Leap Get Environment Configs"
+author: RapidCircle
+description: "Get Environment Configs"
+inputs:
+  TenantId:
+    description: "TenantId"
+    required: true
+  ClientId:
+    description: "ClientId"
+    required: true
+  ClientSecret:
+    description: "ClientSecret"
+    required: true
+  ServiceIdentifier:
+    description: "Leap Service Identifier"
+    required: true
+outputs:
+  EnvironmentConfigsJSON:
+    description: "JSON Object of Environment Configs Value"
+    value: ${{ steps.fetch-environment-configs.outputs.ConfigObject }}
+runs:
+  using: "composite"
+  steps:
+    - name: Get Environment Configs
+      id: fetch-environment-configs
+      shell: pwsh
+      env:
+        HostURL: "https://staging-dna-lkup-api.azurewebsites.net"
+      run: ${{ github.action_path }}/script/Get-EnvironmentConfigs.ps1 `
+        -TenantId ${{ inputs.TenantId }} `
+        -ClientId ${{ inputs.ClientId }} `
+        -ClientSecret ${{ inputs.ClientSecret }} `
+        -ServiceIdentifier ${{ inputs.ServiceIdentifier }}
