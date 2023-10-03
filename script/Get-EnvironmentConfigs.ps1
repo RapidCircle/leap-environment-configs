@@ -50,6 +50,7 @@ try {
     $apiResponse = Invoke-RestMethod -Method GET -Uri $Uri -Headers $reqHeaders
 
     if ($apiResponse) {
+        Write-Host "Environment Configurations Fetched Successfully"
         $environmentConfig = $apiResponse | ConvertTo-Json -Compress
     }
 
