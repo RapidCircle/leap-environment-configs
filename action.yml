@@ -15,7 +15,7 @@ inputs:
     description: "Leap Service Identifier"
     required: true
 outputs:
-  EnvironmentConfigsJSON:
+  EnvironmentConfig:
     description: "JSON Object of Environment Configs Value"
     value: ${{ steps.fetch-environment-configs.outputs.EnvironmentConfig }}
 runs:

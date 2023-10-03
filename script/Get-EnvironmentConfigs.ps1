@@ -52,12 +52,11 @@ try {
     if ($apiResponse) {
         Write-Host "Environment Configurations Fetched Successfully"
         $environmentConfig = $apiResponse | ConvertTo-Json -Compress
+
+        Write-Output "EnvironmentConfig=$environmentConfig" >> $env:GITHUB_OUTPUT
+
+        $env:GITHUB_OUTPUT
     }
-
-
-    Write-Output "EnvironmentConfig=$environmentConfig" >> $env:GITHUB_OUTPUT
-
-    $env:GITHUB_OUTPUT
 }
 catch {
     Write-Host "An exception occurred while fetching environment configurations $($_.Exception.Message)"
