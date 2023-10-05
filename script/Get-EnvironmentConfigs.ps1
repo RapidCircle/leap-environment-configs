@@ -16,9 +16,8 @@ param(
     [string] $ServiceIdentifier
 )
 
-
 #################################################################################################################
-Write-Debug "Getting access token"
+Write-Host "Getting access token"
 
 try {
     $res = Invoke-RestMethod -Method POST `
@@ -29,7 +28,7 @@ try {
     if (![string]::IsNullOrEmpty($res)) {
         $access_token = $res.access_token
         if ($access_token) {
-            Write-Debug "Access token fetched successfully"
+            Write-Host "Access token fetched successfully"
         }    
     }
     else {
@@ -39,14 +38,14 @@ try {
     
 }
 catch {
-    Write-Error "An exception occurred while fetching access token $($_.Exception.Message)"
-    throw "An exception occurred while fetching access token $($_.Exception.Message)"
+    Write-Error "An exception occurred while fetching access token: $($_.Exception.Message)"
+    throw "An exception occurred while fetching access token: $($_.Exception.Message)"
 }
 
 #################################################################################################################
 #################################################################################################################
 
-Write-Debug "Getting Environment Configurations"
+Write-Host "Getting Environment Configurations"
 try {
     if ([string]::IsNullOrEmpty($env:HostURL)) {
         throw "Host URL cannot be empty"
@@ -67,7 +66,7 @@ try {
         $apiResponse.PSObject.Properties | ForEach-Object {
             $ConfigVariableName = "LEAP_$($_.Name)"
             $ConfigVariableValue = $_.Value
-
+            Write-Output "::add-mask::$ConfigVariableValue" 
             Write-Output "$ConfigVariableName=$ConfigVariableValue" >> $env:GITHUB_ENV
         }
         
