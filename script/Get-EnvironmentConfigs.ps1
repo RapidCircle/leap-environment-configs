@@ -18,28 +18,40 @@ param(
 
 
 #################################################################################################################
-Write-Host "Getting access token"
+Write-Debug "Getting access token"
 
 try {
     $res = Invoke-RestMethod -Method POST `
         -Uri "https://login.microsoftonline.com/$TenantId/oauth2/token" `
         -Body @{ resource = $ServiceIdentifier; grant_type = "client_credentials"; client_id = $ClientId; client_secret = $ClientSecret }`
         -ContentType "application/x-www-form-urlencoded"
-    $access_token = $res.access_token
-    #$access_token
-    if ($access_token) {
-        Write-Host "Access token fetched successfully"
+
+    if (![string]::IsNullOrEmpty($res)) {
+        $access_token = $res.access_token
+        if ($access_token) {
+            Write-Debug "Access token fetched successfully"
+        }    
     }
+    else {
+        Write-Error "Unable to fetch the access token"
+        throw "Unable to fetch the access token"
+    }
+    
 }
 catch {
-    Write-Host "An exception occurred while fetching access token $($_.Exception.Message)"
+    Write-Error "An exception occurred while fetching access token $($_.Exception.Message)"
+    throw "An exception occurred while fetching access token $($_.Exception.Message)"
 }
 
 #################################################################################################################
 #################################################################################################################
 
-Write-Host "Getting Environment Configurations"
+Write-Debug "Getting Environment Configurations"
 try {
+    if ([string]::IsNullOrEmpty($env:HostURL)) {
+        throw "Host URL cannot be empty"
+    }
+    
     $Uri = "$($env:HostURL)/api/Tenant/configuration"
 
     $reqHeaders = @{
@@ -56,7 +68,6 @@ try {
             $ConfigVariableName = "LEAP_$($_.Name)"
             $ConfigVariableValue = $_.Value
 
-            Write-Host "Setting Leap Environment Variables to GitHub Environment Variables"
             Write-Output "$ConfigVariableName=$ConfigVariableValue" >> $env:GITHUB_ENV
         }
         
@@ -70,4 +81,5 @@ try {
 }
 catch {
     Write-Host "An exception occurred while fetching environment configurations $($_.Exception.Message)"
+    throw "An exception occurred while fetching environment configurations $($_.Exception.Message)"
 }
