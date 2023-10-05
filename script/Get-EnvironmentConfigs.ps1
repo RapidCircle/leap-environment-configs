@@ -51,11 +51,21 @@ try {
 
     if ($apiResponse) {
         Write-Host "Environment Configurations Fetched Successfully"
+
+        $apiResponse.PSObject.Properties | ForEach-Object {
+            $ConfigVariableName = "LEAP_$($_.Name)"
+            $ConfigVariableValue = $_.Value
+
+            Write-Host "Setting Leap Environment Variables to GitHub Environment Variables"
+            Write-Output "$ConfigVariableName=$ConfigVariableValue" >> $env:GITHUB_ENV
+        }
+        
         $environmentConfig = $apiResponse | ConvertTo-Json -Compress
 
         Write-Output "EnvironmentConfig=$environmentConfig" >> $env:GITHUB_OUTPUT
 
         $env:GITHUB_OUTPUT
+        $env:GITHUB_ENV
     }
 }
 catch {
