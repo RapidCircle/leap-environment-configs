@@ -1,29 +1,18 @@
-param(
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
-    [string] $TenantId,
-
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
-    [string] $ClientId,
-
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
-    [string] $ClientSecret,
-
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
-    [string] $ServiceIdentifier
-)
 
 #################################################################################################################
 Write-Host "Getting access token"
 
 try {
-    $res = Invoke-RestMethod -Method POST `
-        -Uri "https://login.microsoftonline.com/$TenantId/oauth2/token" `
-        -Body @{ resource = $ServiceIdentifier; grant_type = "client_credentials"; client_id = $ClientId; client_secret = $ClientSecret }`
-        -ContentType "application/x-www-form-urlencoded"
+    $requestURL = "https://login.microsoftonline.com/$($env:TenantId)/oauth2/token"
+
+    $reqBody = @{
+        resource      = $env:ServiceIdentifier; 
+        grant_type    = "client_credentials"; 
+        client_id     = $env:ClientId; 
+        client_secret = $env:ClientSecret
+    }
+
+    $res = Invoke-RestMethod -Method POST -Uri $requestURL -Body $reqBody -ContentType "application/x-www-form-urlencoded"
 
     if (![string]::IsNullOrEmpty($res)) {
         $access_token = $res.access_token

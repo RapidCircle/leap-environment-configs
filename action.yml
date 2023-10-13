@@ -1,6 +1,6 @@
-name: "Leap Get Environment Configs"
+name: "Leap Get Environment Variables"
 author: RapidCircle
-description: "Get Environment Configs"
+description: "Get Environment Variables"
 inputs:
   TenantId:
     description: "TenantId"
@@ -14,20 +14,23 @@ inputs:
   ServiceIdentifier:
     description: "Leap Service Identifier"
     required: true
+  HostURL:
+    description: "Host URL of LeapDNA Service"
+    required: true
 outputs:
   EnvironmentConfig:
-    description: "JSON Object of Environment Configs Value"
-    value: ${{ steps.fetch-environment-configs.outputs.EnvironmentConfig }}
+    description: "JSON Object of Environment Variables"
+    value: ${{ steps.fetch-environment-variables.outputs.EnvironmentConfig }}
 runs:
   using: "composite"
   steps:
-    - name: Get Environment Configs
-      id: fetch-environment-configs
+    - name: Get Environment Variables
+      id: fetch-environment-variables
       shell: pwsh
       env:
-        HostURL: "https://staging-dna-mgmt-api.azurewebsites.net"
-      run: ${{ github.action_path }}/script/Get-EnvironmentConfigs.ps1 `
-        -TenantId ${{ inputs.TenantId }} `
-        -ClientId ${{ inputs.ClientId }} `
-        -ClientSecret ${{ inputs.ClientSecret }} `
-        -ServiceIdentifier ${{ inputs.ServiceIdentifier }}
+        HostURL: ${{ inputs.HostURL }}
+        TenantId: ${{ inputs.TenantId }}
+        ClientId: ${{ inputs.ClientId }}
+        ClientSecret: ${{ inputs.ClientSecret }}
+        ServiceIdentifier: ${{ inputs.ServiceIdentifier }}
+      run: ${{ github.action_path }}/script/Get-EnvironmentConfigs.ps1
