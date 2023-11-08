@@ -11,10 +11,10 @@ runs:
     - name: Get Environment Variables
       id: fetch-environment-variables
       shell: pwsh
-      # env:
-      #   HostURL: ${{ env.HostURL }}
-      #   TenantId: ${{ env.TenantId }}
-      #   ClientId: ${{ env.ClientId }}
-      #   ClientSecret: ${{ env.ClientSecret }}
-      #   ServiceIdentifier: ${{ env.ServiceIdentifier }}
+      env:
+        HostURL: ${{ env.HostURL }}
+        TenantId: ${{ env.TenantId }}
+        ClientId: ${{ env.ClientId }}
+        ClientSecret: ${{ env.ClientSecret }}
+        ServiceIdentifier: ${{ env.ServiceIdentifier }}
       run: ${{ github.action_path }}/script/Get-EnvironmentConfigs.ps1
