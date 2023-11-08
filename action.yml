@@ -1,22 +1,6 @@
 name: "Leap Get Environment Variables"
 author: RapidCircle
 description: "Get Environment Variables"
-inputs:
-  TenantId:
-    description: "TenantId"
-    required: true
-  ClientId:
-    description: "ClientId"
-    required: true
-  ClientSecret:
-    description: "ClientSecret"
-    required: true
-  ServiceIdentifier:
-    description: "Leap Service Identifier"
-    required: true
-  HostURL:
-    description: "Host URL of LeapDNA Service"
-    required: true
 outputs:
   EnvironmentConfig:
     description: "JSON Object of Environment Variables"
@@ -27,9 +11,10 @@ runs:
     - name: Get Environment Variables
       id: fetch-environment-variables
       shell: pwsh
-      env:
-        TenantId: ${{ inputs.TenantId }}
-        ClientId: ${{ inputs.ClientId }}
-        ClientSecret: ${{ inputs.ClientSecret }}
-        ServiceIdentifier: ${{ inputs.ServiceIdentifier }}
+      # env:
+      #   HostURL: ${{ env.HostURL }}
+      #   TenantId: ${{ env.TenantId }}
+      #   ClientId: ${{ env.ClientId }}
+      #   ClientSecret: ${{ env.ClientSecret }}
+      #   ServiceIdentifier: ${{ env.ServiceIdentifier }}
       run: ${{ github.action_path }}/script/Get-EnvironmentConfigs.ps1
